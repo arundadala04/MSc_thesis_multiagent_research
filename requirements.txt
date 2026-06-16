@@ -1,0 +1,2 @@
+# install the package with its dependencies
+-e .[dev]

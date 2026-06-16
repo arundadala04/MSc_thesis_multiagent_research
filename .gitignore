@@ -1,0 +1,14 @@
+# secrets — never commit the real .env
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# os
+.DS_Store

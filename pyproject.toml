@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "devsecagent"
+version = "0.1.0"
+description = "DevSecAgent: autonomous CVE remediation baseline (Arm A) in a CI/CD pipeline (MSc thesis ICT solution)"
+requires-python = ">=3.11"
+dependencies = [
+    "openai>=1.40",
+    "python-dotenv>=1.0",
+    "numpy>=1.26",
+    "faiss-cpu>=1.8",
+    "rank-bm25>=0.2",
+    "packaging>=23.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+include = ["devsecagent*"]
