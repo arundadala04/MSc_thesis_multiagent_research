@@ -60,6 +60,10 @@ be installed for the scan and deploy steps:
 
 ## Run
 
+On Windows, double-click `run.bat`: it creates the environment, installs the package, and
+runs the Arm A demo on one sample (it falls back to an Azure-only run if Trivy/Docker are
+not installed). Or run the steps directly.
+
 Run the baseline over the seed dependency CVEs and see how it behaves:
 
     python run_baseline.py
