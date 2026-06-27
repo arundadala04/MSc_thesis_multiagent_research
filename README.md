@@ -68,6 +68,21 @@ Run the tests:
 
     pytest -q
 
+## Run in CI/CD (GitHub Actions)
+
+The same remediation can run in the pipeline instead of on a machine. The `remediate`
+workflow scans the sample, runs the Arm A baseline on each CVE, keeps the fixes that pass
+a clean install test, and opens a pull request:
+
+    .github/workflows/remediate.yml      run it from the Actions tab, or weekly
+
+It needs three repository secrets (Settings > Secrets and variables > Actions):
+`AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT` and `SNYK_TOKEN`. For the pull-request
+step, also enable Settings > Actions > General > "Allow GitHub Actions to create and
+approve pull requests". The same entry point runs locally:
+
+    python remediate.py samples/vuln_python
+
 ## Layout
 
     devsecagent/
@@ -84,5 +99,7 @@ Run the tests:
         dataset.py    the seed evaluation CVEs
         data/         the CVE knowledge base
     run_baseline.py   run the Arm A baseline over the seed CVEs
+    remediate.py      the CI/CD entry point: scan, patch, keep what installs
+    .github/workflows/remediate.yml   the GitHub Actions pipeline
     samples/          a vulnerable project to scan
     tests/            unit tests for each stage

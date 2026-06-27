@@ -1,0 +1,45 @@
+name: DevSecAgent remediation (Arm A baseline)
+
+on:
+  workflow_dispatch:        # run manually from the Actions tab
+  schedule:
+    - cron: "0 6 * * 1"     # and weekly, Monday 06:00 UTC
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  remediate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Trivy
+        run: curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Install Snyk
+        run: npm install -g snyk
+
+      - run: pip install -e .
+
+      - name: Run the Arm A baseline remediation
+        env:
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}   # free token; Trivy runs regardless
+        run: python remediate.py samples/vuln_python
+
+      - name: Open a pull request with the fixes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: "DevSecAgent: automated CVE remediation (Arm A baseline)"
+          commit-message: "Upgrade vulnerable dependencies (DevSecAgent Arm A)"
+          branch: devsecagent/auto-remediation
+          body: |
+            Automated dependency CVE remediation by the DevSecAgent Arm A baseline.
+            Each kept upgrade passed a clean install/build test in a container.
